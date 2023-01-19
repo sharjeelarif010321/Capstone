@@ -33,9 +33,12 @@ DFRobot_BloodOxygen_S_SoftWareUart MAX30102(&mySerial, 9600);
 DFRobot_BloodOxygen_S_HardWareUart MAX30102(&Serial1, 9600); 
 #endif
 #endif
-
+int SentMessage[1] = {000};
+RF24 radio(9,10);
+const uint64_t pipe = 0xE6E6E6E6E6E6;
 void setup()
 {
+  radio.begin();
   Serial.begin(115200);
   while (false == MAX30102.begin())
   {
@@ -45,6 +48,7 @@ void setup()
   Serial.println("init success!");
   Serial.println("start measuring...");
   MAX30102.sensorStartCollect();
+  radio.openWritingPipe(pipe);
 }
 
 void loop()
