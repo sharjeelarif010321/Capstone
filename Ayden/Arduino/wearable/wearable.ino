@@ -14,6 +14,7 @@
 #include "SPI.h"
 #include "printf.h"
 #include <stdio.h>
+#include <LowPower.h>
 
 #define I2C_COMMUNICATION  //use I2C for communication, but use the serial port for communication if the line of codes were masked
 
@@ -68,6 +69,11 @@ void setup()
 void loop()
 {
   MAX30102.getHeartbeatSPO2();
+  while((MAX30102._sHeartbeatSPO2.SPO2 == -1) || (MAX30102._sHeartbeatSPO2.Heartbeat == -1))
+  {
+    MAX30102.getHeartbeatSPO2();
+    delay(4000);
+  }
   Serial.print("SPO2 is : ");
   Serial.print(MAX30102._sHeartbeatSPO2.SPO2);
   Serial.println("%");
@@ -84,12 +90,15 @@ void loop()
   printf(spo2);
   printf("\n");
   radio.write(&spo2,sizeof(spo2));
+  delay(50);
   for(uint8_t i = 0; i < 7; i++)
   {
     spo2[i] = '\0';
   }
-  //The sensor updates the data every 4 seconds
+  MAX30102.sensorEndCollect();
+  LowPower.idle(SLEEP_8S, ADC_OFF, TIMER2_OFF, TIMER1_OFF, TIMER0_OFF, 
+                 SPI_OFF, USART0_OFF, TWI_OFF);
+  delay(50);
+  MAX30102.sensorStartCollect();
   delay(4000);
-  //Serial.println("stop measuring...");
-  //MAX30102.sensorEndCollect();
 }
