@@ -12,6 +12,8 @@
 #include "nRF24L01.h"
 #include "RF24.h"
 #include "SPI.h"
+#include "printf.h"
+#include <stdio.h>
 
 #define I2C_COMMUNICATION  //use I2C for communication, but use the serial port for communication if the line of codes were masked
 
@@ -33,12 +35,24 @@ DFRobot_BloodOxygen_S_SoftWareUart MAX30102(&mySerial, 9600);
 DFRobot_BloodOxygen_S_HardWareUart MAX30102(&Serial1, 9600); 
 #endif
 #endif
-int SentMessage[1] = {000};
+char spo2[] = "\0\0\0\0\0\0\0";
+char pulse[] = "\0\0\0";
 RF24 radio(9,10);
-const uint64_t pipe = 0xE6E6E6E6E6E6;
+uint8_t address[] = {0xE6,0xE6,0xE6,0xE6,0xE6};
 void setup()
 {
   radio.begin();
+  printf_begin();
+  radio.setAddressWidth(5);
+  radio.setChannel(10);
+  radio.setPayloadSize(32);
+  radio.disableAckPayload();
+  radio.disableDynamicPayloads();
+  radio.setAutoAck(false);
+  radio.setPALevel(RF24_PA_MAX);
+  radio.setDataRate(RF24_250KBPS);
+  radio.disableCRC();
+  radio.stopListening();
   Serial.begin(115200);
   while (false == MAX30102.begin())
   {
@@ -48,7 +62,7 @@ void setup()
   Serial.println("init success!");
   Serial.println("start measuring...");
   MAX30102.sensorStartCollect();
-  radio.openWritingPipe(pipe);
+  radio.openWritingPipe(address);
 }
 
 void loop()
@@ -63,6 +77,17 @@ void loop()
   Serial.print("Temperature value of the board is : ");
   Serial.print(MAX30102.getTemperature_C());
   Serial.println(" ℃");
+  itoa(MAX30102._sHeartbeatSPO2.SPO2, spo2, 10);
+  itoa(MAX30102._sHeartbeatSPO2.Heartbeat, pulse, 10);
+  strcat(spo2," ");
+  strcat(spo2, pulse);
+  printf(spo2);
+  printf("\n");
+  radio.write(&spo2,sizeof(spo2));
+  for(uint8_t i = 0; i < 7; i++)
+  {
+    spo2[i] = '\0';
+  }
   //The sensor updates the data every 4 seconds
   delay(4000);
   //Serial.println("stop measuring...");
