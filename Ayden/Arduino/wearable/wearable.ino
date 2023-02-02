@@ -40,8 +40,12 @@ char spo2[] = "\0\0\0\0\0\0\0";
 char pulse[] = "\0\0\0";
 RF24 radio(9,10);
 uint8_t address[] = {0xE6,0xE6,0xE6,0xE6,0xE6};
+uint8_t clk_divider = 1;
 void setup()
 {
+  clk_divider = 4;
+  CLKPR = 0x80;
+  CLKPR = 0x02;
   radio.begin();
   printf_begin();
   radio.setAddressWidth(5);
@@ -58,7 +62,7 @@ void setup()
   while (false == MAX30102.begin())
   {
     Serial.println("init fail!");
-    delay(1000);
+    delay(1000/clk_divider);
   }
   Serial.println("init success!");
   Serial.println("start measuring...");
@@ -71,33 +75,37 @@ void loop()
   MAX30102.getHeartbeatSPO2();
   while((MAX30102._sHeartbeatSPO2.SPO2 == -1) || (MAX30102._sHeartbeatSPO2.Heartbeat == -1))
   {
+    delay(64/clk_divider);
     MAX30102.getHeartbeatSPO2();
-    delay(4000);
   }
-  Serial.print("SPO2 is : ");
-  Serial.print(MAX30102._sHeartbeatSPO2.SPO2);
-  Serial.println("%");
-  Serial.print("heart rate is : ");
-  Serial.print(MAX30102._sHeartbeatSPO2.Heartbeat);
-  Serial.println("Times/min");
-  Serial.print("Temperature value of the board is : ");
-  Serial.print(MAX30102.getTemperature_C());
-  Serial.println(" ℃");
+//  Serial.print("SPO2 is : ");
+//  Serial.print(MAX30102._sHeartbeatSPO2.SPO2);
+//  Serial.println("%");
+//  Serial.print("heart rate is : ");
+//  Serial.print(MAX30102._sHeartbeatSPO2.Heartbeat);
+//  Serial.println("Times/min");
+//  Serial.print("Temperature value of the board is : ");
+//  Serial.print(MAX30102.getTemperature_C());
+//  Serial.println(" ℃");
   itoa(MAX30102._sHeartbeatSPO2.SPO2, spo2, 10);
   itoa(MAX30102._sHeartbeatSPO2.Heartbeat, pulse, 10);
   strcat(spo2," ");
   strcat(spo2, pulse);
-  printf(spo2);
-  printf("\n");
+//  printf(spo2);
+//  printf("\n");
+  radio.powerUp();
+  delay(5);
   radio.write(&spo2,sizeof(spo2));
-  delay(50);
+  delay(5);
+  radio.powerDown();
   for(uint8_t i = 0; i < 7; i++)
   {
     spo2[i] = '\0';
   }
   MAX30102.sensorEndCollect();
-  LowPower.idle(SLEEP_8S, ADC_OFF, TIMER2_OFF, TIMER1_OFF, TIMER0_OFF, 
-                 SPI_OFF, USART0_OFF, TWI_OFF);
+//  LowPower.idle(SLEEP_8S, ADC_OFF, TIMER2_OFF, TIMER1_OFF, TIMER0_OFF, 
+//                 SPI_OFF, USART0_OFF, TWI_OFF);
+  LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF); 
   delay(50);
   MAX30102.sensorStartCollect();
   delay(4000);
