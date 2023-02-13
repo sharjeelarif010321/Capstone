@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include "usr/nRF24L01.h"
 #include "usr/adc.h"
+#include "usr/gpio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -96,6 +97,13 @@ int main(void)
   MX_SPI1_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
+  /*Configure GPIO pin : PA10 */
+  GPIO_config(GPIOA, GPIO_PIN_0, GPIO_MODE_INPUT, GPIO_NOPULL);
+  GPIO_config(GPIOC, GPIO_PIN_0, GPIO_MODE_INPUT, GPIO_NOPULL);
+  GPIO_config(GPIOA, GPIO_PIN_1, GPIO_MODE_INPUT, GPIO_NOPULL);
+//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
+//  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, GPIO_PIN_SET);
+//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
   nrf24_Init();
   nrf24_RxMode(rx_address, 10);
   /* USER CODE END 2 */
@@ -122,7 +130,8 @@ int main(void)
 	  /*
 	   * LEFT COLUMN OF TEST MAT
 	   */
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
+	  GPIO_config(GPIOA, GPIO_PIN_0, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
+	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
 	  ADC_Select_CH11();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
@@ -140,11 +149,14 @@ int main(void)
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[0][2] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+	  GPIO_config(GPIOA, GPIO_PIN_0, GPIO_MODE_INPUT, GPIO_NOPULL);
+//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
+
 	  /*
 	   * MIDDLE COLUMN OF TEST MAT
 	   */
-	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, GPIO_PIN_SET);
+	  GPIO_config(GPIOC, GPIO_PIN_0, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
+	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, GPIO_PIN_RESET);
 	  ADC_Select_CH11();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
@@ -162,11 +174,14 @@ int main(void)
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[1][2] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
-	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, GPIO_PIN_RESET);
+	  GPIO_config(GPIOC, GPIO_PIN_0, GPIO_MODE_INPUT, GPIO_NOPULL);
+//	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, GPIO_PIN_SET);
+
 	  /*
 	   * RIGHT COLUMN OF TEST MAT
 	   */
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+	  GPIO_config(GPIOA, GPIO_PIN_1, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
+	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
 	  ADC_Select_CH11();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
@@ -184,7 +199,8 @@ int main(void)
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[2][2] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
-	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+	  GPIO_config(GPIOA, GPIO_PIN_1, GPIO_MODE_INPUT, GPIO_NOPULL);
+//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
 
 /*	Single-channel analog version working (only useful for testing)
 */
