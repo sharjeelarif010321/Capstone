@@ -201,6 +201,14 @@ int main(void)
 	  HAL_ADC_Stop(&hadc1);
 	  GPIO_config(GPIOA, GPIO_PIN_1, GPIO_MODE_INPUT, GPIO_NOPULL);
 //	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+	  for (int i = 0; i < NUM_ROWS; i++)
+	  {
+		  for (int j = 0; j < NUM_COLS; j++)
+		  {
+			  //Update rx_data buffer with data from pressure sensors
+		  }
+	  }
+
 
 /*	Single-channel analog version working (only useful for testing)
 */
