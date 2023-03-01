@@ -51,3 +51,17 @@ void ADC_Select_CH13(void)
 	Error_Handler();
 	}
 }
+
+void ADC_Select_CH14(void)
+{
+	ADC_ChannelConfTypeDef sConfig = {0};
+	/** Configure Regular Channel
+	*/
+	sConfig.Channel = ADC_CHANNEL_14;
+	sConfig.Rank = ADC_REGULAR_RANK_1;
+	sConfig.SamplingTime = ADC_SAMPLETIME_13CYCLES_5;
+	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+	{
+	Error_Handler();
+	}
+}

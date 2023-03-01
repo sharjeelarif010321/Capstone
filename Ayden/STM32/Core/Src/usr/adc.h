@@ -11,6 +11,7 @@
 void ADC_Select_CH11(void);
 void ADC_Select_CH12(void);
 void ADC_Select_CH13(void);
+void ADC_Select_CH14(void);
 
 #endif /* SRC_USR_ADC_H_ */
 
