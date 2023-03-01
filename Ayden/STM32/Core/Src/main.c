@@ -61,9 +61,9 @@ static void MX_ADC1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 uint8_t rx_address[] = {0xE6,0xE6,0xE6,0xE6,0xE6};
-uint8_t rx_data[32];
-uint8_t pressed = 0;
+uint8_t rx_data[37];
 uint16_t adc_raw[7][4];
+uint8_t rx_flag = 0;
 /* USER CODE END 0 */
 
 /**
@@ -97,13 +97,13 @@ int main(void)
   MX_SPI1_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-  /*Configure GPIO pin : PA10 */
   GPIO_config(GPIOA, GPIO_PIN_0, GPIO_MODE_INPUT, GPIO_NOPULL);
-  GPIO_config(GPIOC, GPIO_PIN_0, GPIO_MODE_INPUT, GPIO_NOPULL);
   GPIO_config(GPIOA, GPIO_PIN_1, GPIO_MODE_INPUT, GPIO_NOPULL);
-//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
-//  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, GPIO_PIN_SET);
-//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
+  GPIO_config(GPIOC, GPIO_PIN_0, GPIO_MODE_INPUT, GPIO_NOPULL);
+  GPIO_config(GPIOB, GPIO_PIN_8, GPIO_MODE_INPUT, GPIO_NOPULL);
+  GPIO_config(GPIOB, GPIO_PIN_4, GPIO_MODE_INPUT, GPIO_NOPULL);
+  GPIO_config(GPIOB, GPIO_PIN_5, GPIO_MODE_INPUT, GPIO_NOPULL);
+  GPIO_config(GPIOB, GPIO_PIN_6, GPIO_MODE_INPUT, GPIO_NOPULL);
   nrf24_Init();
   nrf24_RxMode(rx_address, 10);
   /* USER CODE END 2 */
@@ -123,84 +123,10 @@ int main(void)
 	  {
 		  nrf24_Receive(rx_data);
 		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
+		  rx_flag = 1;
 	  }
 	  HAL_Delay(100);
 	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET);
-
-//	  /*
-//	   * LEFT COLUMN OF TEST MAT
-//	   */
-//	  GPIO_config(GPIOA, GPIO_PIN_0, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
-//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
-//	  ADC_Select_CH11();
-//	  HAL_ADC_Start(&hadc1);
-//	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-//	  adc_raw[0][0] = HAL_ADC_GetValue(&hadc1);
-//	  HAL_ADC_Stop(&hadc1);
-//
-//	  ADC_Select_CH12();
-//	  HAL_ADC_Start(&hadc1);
-//	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-//	  adc_raw[0][1] = HAL_ADC_GetValue(&hadc1);
-//	  HAL_ADC_Stop(&hadc1);
-//
-//	  ADC_Select_CH13();
-//	  HAL_ADC_Start(&hadc1);
-//	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-//	  adc_raw[0][2] = HAL_ADC_GetValue(&hadc1);
-//	  HAL_ADC_Stop(&hadc1);
-//	  GPIO_config(GPIOA, GPIO_PIN_0, GPIO_MODE_INPUT, GPIO_NOPULL);
-////	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET);
-//
-//	  /*
-//	   * MIDDLE COLUMN OF TEST MAT
-//	   */
-//	  GPIO_config(GPIOC, GPIO_PIN_0, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
-//	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, GPIO_PIN_RESET);
-//	  ADC_Select_CH11();
-//	  HAL_ADC_Start(&hadc1);
-//	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-//	  adc_raw[1][0] = HAL_ADC_GetValue(&hadc1);
-//	  HAL_ADC_Stop(&hadc1);
-//
-//	  ADC_Select_CH12();
-//	  HAL_ADC_Start(&hadc1);
-//	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-//	  adc_raw[1][1] = HAL_ADC_GetValue(&hadc1);
-//	  HAL_ADC_Stop(&hadc1);
-//
-//	  ADC_Select_CH13();
-//	  HAL_ADC_Start(&hadc1);
-//	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-//	  adc_raw[1][2] = HAL_ADC_GetValue(&hadc1);
-//	  HAL_ADC_Stop(&hadc1);
-//	  GPIO_config(GPIOC, GPIO_PIN_0, GPIO_MODE_INPUT, GPIO_NOPULL);
-////	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, GPIO_PIN_SET);
-//
-//	  /*
-//	   * RIGHT COLUMN OF TEST MAT
-//	   */
-//	  GPIO_config(GPIOA, GPIO_PIN_1, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
-//	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
-//	  ADC_Select_CH11();
-//	  HAL_ADC_Start(&hadc1);
-//	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-//	  adc_raw[2][0] = HAL_ADC_GetValue(&hadc1);
-//	  HAL_ADC_Stop(&hadc1);
-//
-//	  ADC_Select_CH12();
-//	  HAL_ADC_Start(&hadc1);
-//	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-//	  adc_raw[2][1] = HAL_ADC_GetValue(&hadc1);
-//	  HAL_ADC_Stop(&hadc1);
-//
-//	  ADC_Select_CH13();
-//	  HAL_ADC_Start(&hadc1);
-//	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-//	  adc_raw[2][2] = HAL_ADC_GetValue(&hadc1);
-//	  HAL_ADC_Stop(&hadc1);
-//	  GPIO_config(GPIOA, GPIO_PIN_1, GPIO_MODE_INPUT, GPIO_NOPULL);
-////	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET);
 
 	  /*
 	   * PRESSURE MAT ROW #1
@@ -412,41 +338,38 @@ int main(void)
 	  HAL_ADC_Stop(&hadc1);
 	  GPIO_config(GPIOB, GPIO_PIN_6, GPIO_MODE_INPUT, GPIO_NOPULL);
 
-//	  for (int i = 0; i < NUM_ROWS; i++)
-//	  {
-//		  for (int j = 0; j < NUM_COLS; j++)
-//		  {
-//			  //Update rx_data buffer with data from pressure sensors
-//		  }
-//	  }
+	  if(rx_flag)
+	  {
+		  rx_data[7] = ' ';
+	  }
+	  else
+	  {
+		  for(int i = 0; i < 8; i++)
+		  {
+			  rx_data[i] = ' ';
+		  }
+	  }
+	  for(int i = 0; i < NUM_ROWS; i++)
+	  {
+		  for(int j = 0; j < NUM_COLS; j++)
+		  {
+			  //Update rx_data buffer with data from pressure sensors
+			  //THIS VALUE IS THE COMPARISON THAT DETERMINES IF THERE IS WEIGHT ON A SENSOR
+			  //IT WILL NEED TO BE TUNED BASED ON ACTUAL VALUES WHEN TESTING
+			  if(adc_raw[i][j] < 1000)
+			  {
+				  rx_data[8 + (NUM_COLS*i) + j] = '1';
+			  }
+			  else
+			  {
+				  rx_data[8 + (NUM_COLS*i) + j] = '0';
+			  }
+		  }
+	  }
+	  rx_data[36] = '\0';
 
-
-/*	Single-channel analog version working (only useful for testing)
-*/
-//	  HAL_ADC_Start(&hadc1);
-//	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-//	  raw = HAL_ADC_GetValue(&hadc1);
-//	  if(raw > 2500)
-//	  {
-//		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
-//	  }
-//	  else
-//	  {
-//		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET);
-//	  }
-//	  HAL_Delay(100);
-
-/*	Digital version which would require an external comparator circuit
- */
-//	  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_1))
-//	  {
-//		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
-//	  }
-//	  else
-//	  {
-//		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_RESET);
-//	  }
-//	  HAL_Delay(100);
+	  rx_flag = 0;
+	  HAL_Delay(200);
   }
   /* USER CODE END 3 */
 }
