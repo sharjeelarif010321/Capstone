@@ -64,7 +64,8 @@ static void MX_USART1_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 uint8_t rx_address[] = {0xE6,0xE6,0xE6,0xE6,0xE6};
-uint8_t rx_data[37];
+uint8_t rx_data[32];
+uint8_t tx_data[37];
 uint16_t adc_raw[7][4];
 uint8_t rx_flag = 0;
 /* USER CODE END 0 */
@@ -344,35 +345,39 @@ int main(void)
 
 	  if(rx_flag)
 	  {
-		  rx_data[7] = ' ';
+		  for(int i = 0; i < 7; i++)
+		  {
+			  tx_data[i] = rx_data[i];
+		  }
+		  tx_data[7] = ' ';
 	  }
 	  else
 	  {
 		  for(int i = 0; i < 8; i++)
 		  {
-			  rx_data[i] = ' ';
+			  tx_data[i] = ' ';
 		  }
 	  }
 	  for(int i = 0; i < NUM_ROWS; i++)
 	  {
 		  for(int j = 0; j < NUM_COLS; j++)
 		  {
-			  //Update rx_data buffer with data from pressure sensors
+			  //Update tx_data buffer with data from pressure sensors
 			  //THIS VALUE IS THE COMPARISON THAT DETERMINES IF THERE IS WEIGHT ON A SENSOR
 			  //IT WILL NEED TO BE TUNED BASED ON ACTUAL VALUES WHEN TESTING
 			  if(adc_raw[i][j] < 1000)
 			  {
-				  rx_data[8 + (NUM_COLS*i) + j] = '1';
+				  tx_data[8 + (NUM_COLS*i) + j] = '1';
 			  }
 			  else
 			  {
-				  rx_data[8 + (NUM_COLS*i) + j] = '0';
+				  tx_data[8 + (NUM_COLS*i) + j] = '0';
 			  }
 		  }
 	  }
-	  rx_data[36] = '\0';
+	  tx_data[36] = '\0';
 	  //Transmit data to Raspberry Pi
-	  HAL_UART_Transmit(&huart1,rx_data,sizeof(rx_data),1000);
+	  HAL_UART_Transmit(&huart1,tx_data,sizeof(tx_data),1000);
 	  rx_flag = 0;
 	  HAL_Delay(200);
   }
