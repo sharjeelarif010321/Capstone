@@ -48,6 +48,7 @@ void setup()
 //  clk_divider = 2;
 //  CLKPR = 0x80;
 //  CLKPR = 0x01;
+  pinMode(8, OUTPUT);
   radio.begin();
   printf_begin();
   radio.setAddressWidth(5);
@@ -124,13 +125,12 @@ void loop()
     }
   }
   MAX30102.sensorEndCollect();
-//  LowPower.idle(SLEEP_8S, ADC_OFF, TIMER2_OFF, TIMER1_OFF, TIMER0_OFF, 
-//                 SPI_OFF, USART0_OFF, TWI_OFF);
-  for (uint8_t i=0; i<7; i++)
-  {
-    LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
-  }
-  delay(50);
-  MAX30102.sensorStartCollect();
-  delay(4000);
+  digitalWrite(8, HIGH); //Signal the TPL5111 to power down
+  // for (uint8_t i=0; i<7; i++)
+  // {
+  //   LowPower.powerDown(SLEEP_8S, ADC_OFF, BOD_OFF);
+  // }
+  // delay(50);
+  // MAX30102.sensorStartCollect();
+  // delay(4000);
 }
