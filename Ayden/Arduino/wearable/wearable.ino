@@ -49,6 +49,7 @@ void setup()
 //  CLKPR = 0x80;
 //  CLKPR = 0x01;
   pinMode(8, OUTPUT);
+  digitalWrite(8, LOW);
   radio.begin();
   printf_begin();
   radio.setAddressWidth(5);
