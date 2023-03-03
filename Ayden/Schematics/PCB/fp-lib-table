@@ -1,0 +1,4 @@
+(fp_lib_table
+  (lib (name "digikey-footprints")(type "KiCad")(uri "C:/Users/Ayden/Documents/School/Assignments/ENEL 417/Repository/Capstone/Ayden/Schematics/libraries/digikey-kicad-library-master/digikey-footprints.pretty")(options "")(descr ""))
+  (lib (name "NUCLEO-F303RE")(type "KiCad")(uri "C:/Users/Ayden/Documents/School/Assignments/ENEL 417/Repository/Capstone/Ayden/Schematics/libraries/NUCLEO-F303RE")(options "")(descr ""))
+)
