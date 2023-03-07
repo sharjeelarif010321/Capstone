@@ -375,7 +375,7 @@ int main(void)
 			  }
 		  }
 	  }
-	  tx_data[36] = '\0';
+	  tx_data[36] = '\n';
 	  //Transmit data to Raspberry Pi
 	  HAL_UART_Transmit(&huart1,tx_data,sizeof(tx_data),1000);
 	  rx_flag = 0;
