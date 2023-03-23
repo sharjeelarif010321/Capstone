@@ -107,7 +107,7 @@ void loop()
     // Serial.print(MAX30102.getTemperature_C());
     // Serial.println(" ℃");
     count++;
-    if((count == 7) || ((spo2_flag == 1) && (pulse_flag == 1)))
+    if((count == 6) || ((spo2_flag == 1) && (pulse_flag == 1)))
     {
       if (((spo2_flag == 1) && (pulse_flag == 1)))
       {
@@ -116,7 +116,7 @@ void loop()
       break;
     }
   }
-  if(count == 7)
+  if(count == 6)
   {
     count = 0;
     // Serial.println("FAIL");
