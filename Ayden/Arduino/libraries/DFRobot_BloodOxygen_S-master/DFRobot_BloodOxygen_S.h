@@ -10,6 +10,7 @@
  */
 #ifndef __DFRobot_BloodOxygen_S_H__
 #define __DFRobot_BloodOxygen_S_H__
+#define ARDUINO_AVR_UNO
 #include "Arduino.h"
 #include <Wire.h>
 #include "DFRobot_RTU.h"
