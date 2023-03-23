@@ -4,6 +4,11 @@
 
   (paper "A4")
 
+  (title_block
+    (title "STM32 System")
+    (date "2023-03-24")
+  )
+
   (lib_symbols
     (symbol "Device:R_Pack06_SIP" (pin_names (offset 0) hide) (in_bom yes) (on_board yes)
       (property "Reference" "RN?" (id 0) (at 0 11.43 0)
@@ -1990,8 +1995,8 @@
     (property "Datasheet" "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/CD00161566.pdf" (id 3) (at 130.81 105.41 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "" (uuid 16e4486f-1591-4685-9387-8205a660f32e))
-    (pin "" (uuid 16e4486f-1591-4685-9387-8205a660f32e))
+    (pin "" (uuid 16e4486f-1591-4685-9387-8205a660f32f))
+    (pin "" (uuid 16e4486f-1591-4685-9387-8205a660f32f))
     (pin "1" (uuid cecac446-d0ce-4923-9b51-885e301f88c7))
     (pin "10" (uuid aee92999-1abd-4682-b7e3-e97f34ed3040))
     (pin "11" (uuid a00999ec-748f-487e-b3c7-68e69632b3ee))
