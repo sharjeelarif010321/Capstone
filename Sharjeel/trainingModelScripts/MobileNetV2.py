@@ -47,6 +47,12 @@ base_model.trainable = False
 model = tf.keras.Sequential([
     base_model,
     tf.keras.layers.GlobalAveragePooling2D(),
+    tf.keras.layers.Dense(1024, activation='relu'),  # Added Dense layer
+    tf.keras.layers.BatchNormalization(),            # Added BatchNormalization layer
+    tf.keras.layers.Dropout(0.5),                     # Added Dropout layer
+    tf.keras.layers.Dense(512, activation='relu'),   # Added another Dense layer
+    tf.keras.layers.BatchNormalization(),            # Added another BatchNormalization layer
+    tf.keras.layers.Dropout(0.5),                     # Added another Dropout layer
     tf.keras.layers.Dense(num_classes, activation='softmax')
 ])
 
