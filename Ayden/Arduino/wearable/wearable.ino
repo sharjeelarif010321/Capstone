@@ -85,13 +85,11 @@ void loop()
     if((MAX30102._sHeartbeatSPO2.SPO2 != -1) && (spo2_flag == 0))
     {
       itoa(MAX30102._sHeartbeatSPO2.SPO2, spo2, 10);
-      // Serial.println("got SpO2");
       spo2_flag = 1;
     }
     if((MAX30102._sHeartbeatSPO2.Heartbeat != -1) && (pulse_flag == 0))
     {
       itoa(MAX30102._sHeartbeatSPO2.Heartbeat, pulse, 10);
-      // Serial.println("got pulse");
       pulse_flag = 1;
     }
     delay(4000/clk_divider);
