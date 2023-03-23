@@ -10,7 +10,7 @@ img_height = 512
 img_width = 512
 batch_size = 64
 num_classes = 4
-epochs = 10
+epochs = 15
 
 # Create ImageDataGenerators for training, validation, and test data
 train_datagen = ImageDataGenerator(rescale=1./255)
