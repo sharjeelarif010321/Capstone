@@ -1,20 +1,15 @@
 /* USER CODE BEGIN Header */
 /**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2023 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+* main.c
+*
+* DESCRIPTION:
+* This program is responsible for receiving wireless communication data from the
+* wearable vitals monitor, as well as sweeping the 7x4 pressure sensor array
+* using the on-board ADC. Once all of this data is collected, the program
+* organizes the data and transmits it over UART to the Raspberry Pi.
+*
+* AUTHOR: Ayden Mack 200405410
+*/
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -63,10 +58,15 @@ static void MX_USART1_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+//Define address for nRF24L01 channel
 uint8_t rx_address[] = {0xE6,0xE6,0xE6,0xE6,0xE6};
+
+//Data buffers
 uint8_t rx_data[32];
 uint8_t tx_data[37];
 uint16_t adc_raw[7][4];
+
+//Flag to show if wireless data has been received
 uint8_t rx_flag = 0;
 /* USER CODE END 0 */
 
@@ -102,6 +102,7 @@ int main(void)
   MX_ADC1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  //Configure all rows of the pressure mat to be input (high impedance)
   GPIO_config(GPIOA, GPIO_PIN_0, GPIO_MODE_INPUT, GPIO_NOPULL);
   GPIO_config(GPIOA, GPIO_PIN_1, GPIO_MODE_INPUT, GPIO_NOPULL);
   GPIO_config(GPIOC, GPIO_PIN_0, GPIO_MODE_INPUT, GPIO_NOPULL);
@@ -109,6 +110,8 @@ int main(void)
   GPIO_config(GPIOB, GPIO_PIN_4, GPIO_MODE_INPUT, GPIO_NOPULL);
   GPIO_config(GPIOB, GPIO_PIN_5, GPIO_MODE_INPUT, GPIO_NOPULL);
   GPIO_config(GPIOB, GPIO_PIN_6, GPIO_MODE_INPUT, GPIO_NOPULL);
+
+  //Initialize wireless comms
   nrf24_Init();
   nrf24_RxMode(rx_address, 10);
   /* USER CODE END 2 */
@@ -124,10 +127,12 @@ int main(void)
 	  /*
 	   * Wireless comms code
 	   */
+	  //Check if data is waiting and add to the buffer if so
 	  if(isDataAvailable(1))
 	  {
 		  nrf24_Receive(rx_data);
-		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);
+		  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_8, GPIO_PIN_SET);	//Light LED to indicate
+		  	  	  	  	  	  	  	  	  	  	  	  	  	  	//data has been received
 		  rx_flag = 1;
 	  }
 	  HAL_Delay(100);
@@ -138,24 +143,29 @@ int main(void)
 	   */
 	  GPIO_config(GPIOA, GPIO_PIN_0, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
 	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_RESET);
+
+	  //COLUMN #1
 	  ADC_Select_CH11();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[0][0] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #2
 	  ADC_Select_CH12();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[0][1] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #3
 	  ADC_Select_CH13();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[0][2] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #4
 	  ADC_Select_CH14();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
@@ -168,24 +178,29 @@ int main(void)
 	   */
 	  GPIO_config(GPIOA, GPIO_PIN_1, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
 	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_RESET);
+
+	  //COLUMN #1
 	  ADC_Select_CH11();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[1][0] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #2
 	  ADC_Select_CH12();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[1][1] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #3
 	  ADC_Select_CH13();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[1][2] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #4
 	  ADC_Select_CH14();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
@@ -198,24 +213,29 @@ int main(void)
 	   */
 	  GPIO_config(GPIOC, GPIO_PIN_0, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
 	  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_0, GPIO_PIN_RESET);
+
+	  //COLUMN #1
 	  ADC_Select_CH11();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[2][0] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #2
 	  ADC_Select_CH12();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[2][1] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #3
 	  ADC_Select_CH13();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[2][2] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #4
 	  ADC_Select_CH14();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
@@ -228,24 +248,29 @@ int main(void)
 	   */
 	  GPIO_config(GPIOB, GPIO_PIN_8, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
 	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
+
+	  //COLUMN #1
 	  ADC_Select_CH11();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[3][0] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #2
 	  ADC_Select_CH12();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[3][1] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #3
 	  ADC_Select_CH13();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[3][2] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #4
 	  ADC_Select_CH14();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
@@ -258,24 +283,29 @@ int main(void)
 	   */
 	  GPIO_config(GPIOB, GPIO_PIN_4, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
 	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_RESET);
+
+	  //COLUMN #1
 	  ADC_Select_CH11();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[4][0] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #2
 	  ADC_Select_CH12();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[4][1] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #3
 	  ADC_Select_CH13();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[4][2] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #4
 	  ADC_Select_CH14();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
@@ -288,24 +318,29 @@ int main(void)
 	   */
 	  GPIO_config(GPIOB, GPIO_PIN_5, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
 	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, GPIO_PIN_RESET);
+
+	  //COLUMN #1
 	  ADC_Select_CH11();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[5][0] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #2
 	  ADC_Select_CH12();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[5][1] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #3
 	  ADC_Select_CH13();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[5][2] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #4
 	  ADC_Select_CH14();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
@@ -318,24 +353,29 @@ int main(void)
 	   */
 	  GPIO_config(GPIOB, GPIO_PIN_6, GPIO_MODE_OUTPUT_PP, GPIO_NOPULL);
 	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, GPIO_PIN_RESET);
+
+	  //COLUMN #1
 	  ADC_Select_CH11();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[6][0] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #2
 	  ADC_Select_CH12();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[6][1] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #3
 	  ADC_Select_CH13();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	  adc_raw[6][2] = HAL_ADC_GetValue(&hadc1);
 	  HAL_ADC_Stop(&hadc1);
 
+	  //COLUMN #4
 	  ADC_Select_CH14();
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
@@ -343,6 +383,10 @@ int main(void)
 	  HAL_ADC_Stop(&hadc1);
 	  GPIO_config(GPIOB, GPIO_PIN_6, GPIO_MODE_INPUT, GPIO_NOPULL);
 
+	  /*
+	   * Data organization
+	   */
+	  //If data received from wireless vitals monitor, add it to Tx buffer
 	  if(rx_flag)
 	  {
 		  for(int i = 0; i < 7; i++)
@@ -351,6 +395,8 @@ int main(void)
 		  }
 		  tx_data[7] = ' ';
 	  }
+	  //If no data received from wireless vitals monitor, fill first 8 spaces of Tx
+	  //buffer with spaces
 	  else
 	  {
 		  for(int i = 0; i < 8; i++)
@@ -358,13 +404,13 @@ int main(void)
 			  tx_data[i] = ' ';
 		  }
 	  }
+	  //Add pressure mat data to Tx buffer
 	  for(int i = 0; i < NUM_ROWS; i++)
 	  {
 		  for(int j = 0; j < NUM_COLS; j++)
 		  {
-			  //Update tx_data buffer with data from pressure sensors
-			  //THIS VALUE IS THE COMPARISON THAT DETERMINES IF THERE IS WEIGHT ON A SENSOR
-			  //IT WILL NEED TO BE TUNED BASED ON ACTUAL VALUES WHEN TESTING
+			  //Update tx_data buffer with data from pressure sensors:
+			  //If incoming voltage less than 1V on any sensor, a baby is present
 			  if(adc_raw[i][j] < 1000)
 			  {
 				  tx_data[8 + (NUM_COLS*i) + j] = '1';
@@ -376,6 +422,7 @@ int main(void)
 		  }
 	  }
 	  tx_data[36] = '\n';
+
 	  //Transmit data to Raspberry Pi
 	  HAL_UART_Transmit(&huart1,tx_data,sizeof(tx_data),1000);
 	  rx_flag = 0;

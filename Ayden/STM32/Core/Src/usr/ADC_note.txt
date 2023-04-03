@@ -1,3 +1,14 @@
+/**
+* ADC_note.txt
+*
+* DESCRIPTION:
+* This file contains a note-to-self on how to edit the code. The IDE used (STM32CubeIDE) contains a lot of
+* auto-generated code that re-generates every time modifications are made to the .ioc file. The note makes
+* sure I remember to change the auto-generated code to prevent interference with my written code.
+*
+* AUTHOR: Ayden Mack 200405410
+*/
+
 If changing ADC configuration via the .ioc file, make sure to add/modify the ADC_Select_CHxx functions in adc.c
 	- IF ADDING NEW CHANNEL, MAKE SURE TO MAKE THE FUNCTION THE EXACT SAME AS THE OTHERS
 		- CHANGE RANK TO 1, ADD SAMPLE TIME, ADD DECLARATION AT BEGINNING
