@@ -1,9 +1,12 @@
-/*
- * gpio.c
- *
- *  Created on: Feb 12, 2023
- *      Author: Ayden
- */
+/**
+* gpio.c
+*
+* DESCRIPTION:
+* This file contains a helper function to quickly re-configure a single GPIO pin
+* on the STM32F103RB board.
+*
+* AUTHOR: Ayden Mack 200405410
+*/
 
 #include "stm32f1xx_hal.h"
 #include "gpio.h"
