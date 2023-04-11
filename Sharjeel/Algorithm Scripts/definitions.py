@@ -1,3 +1,9 @@
+###################################
+# Author: Sharjeel Arif
+# SID: 200388331
+# 02th February 2023
+###################################
+
 #__DEFINE__Colours
 GREEN = (80, 110, 10)
 LGREEN = (80,256,121)
@@ -29,7 +35,8 @@ minDetectionConfidence = 0.5
 status = "awake"
 previousStatus = "awake"
 previousPostureStatus = "uknown"
-num_threads = 2
+postureValue = "Unknown"
+statusValue = "Unknown"
 
 #__DEFINE__Tolerance
 minTolerance = 3.7
