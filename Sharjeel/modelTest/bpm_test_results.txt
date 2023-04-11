@@ -1,0 +1,55 @@
+
+BABY POSTURE MODEL VERSION 1.0 (BPMV1) TEST RESULTS:
+
+	No Augment Accuracy: 82.32% (1886/2291 images)
+
+	Horizontal Flip + Rotation Accuracy: 75.82% (1737/2291 images)
+
+	Vertical Flip + Rotation Accuracy: 67.22% (1540/2291 images)
+
+	Vertical + Horizontal Flip + Rotation Accuracy: 68.01% (1558/2291 images)
+
+	Vertical + Horizontal Flip + Rotation + Zoom Accuracy: 66.56% (1525/2291 images)
+
+
+
+BABY POSTURE MODEL VERSION 2.0 (BPMV2) TEST RESULTS:
+	
+	No Augment Accuracy: 97.64% (2237/2291 images)
+
+	Horizontal Flip + Rotation Accuracy: 93.89% (2151/2291 images)
+
+	Vertical Flip + Rotation Accuracy: 93.76% (2148/2291 images)
+
+	Vertical + Horizontal Flip + Rotation Accuracy: 94.11% (2156/2291 images)
+
+	Vertical + Horizontal Flip + Rotation + Zoom Accuracy: 93.15% (2134/2291 images)
+
+
+
+BABY POSTURE MODEL VERSION 3.0 (BPMV3) TEST RESULTS:
+
+	No Augment Accuracy: 98.73% (2262/2291 images)
+
+	Horizontal Flip + Rotation Accuracy: 95.94% (2198/2291 images)
+
+	Vertical Flip + Rotation Accuracy: 95.02% (2177/2291 images)
+
+	Vertical + Horizontal Flip + Rotation Accuracy: 95.90% (2197/2291 images)
+
+	Vertical + Horizontal Flip + Rotation + Zoom Accuracy: 94.76% (2171/2291 images)
+
+
+
+BABY POSTURE MODEL VERSION 4.0 (BPMV4) TEST RESULTS:
+
+	No Augment Accuracy: 99.04% (2269/2291 images)
+
+	Horizontal Flip + Rotation Accuracy: 97.38% (2231/2291 images)
+
+	Vertical Flip + Rotation Accuracy: 96.81% (2218/2291 images)
+
+	Vertical + Horizontal Flip + Rotation Accuracy: 97.16% (2226/2291 images)
+
+	Vertical + Horizontal Flip + Rotation + Zoom Accuracy: 95.77% (2194/2291 images)
+
